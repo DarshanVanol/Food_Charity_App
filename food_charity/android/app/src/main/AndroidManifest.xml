@@ -2,7 +2,7 @@
     package="com.example.food_charity">
    <application
         android:label="food_charity"
-        android:icon="@mipmap/launch_image">
+        android:icon="@mipmap/launch">
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

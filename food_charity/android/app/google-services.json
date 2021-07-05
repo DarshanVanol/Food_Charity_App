@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "901248862530",
+    "project_id": "foodcharity-cc833",
+    "storage_bucket": "foodcharity-cc833.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:901248862530:android:30b709df630425da5720db",
+        "android_client_info": {
+          "package_name": "com.darsh.food_charity"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "901248862530-5kjm8a5b2u4ve12t7jkbfck753dlmbof.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDSDYlalQ7tBNEE9qyoeeNfBLLG4UDPduc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "901248862530-5kjm8a5b2u4ve12t7jkbfck753dlmbof.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

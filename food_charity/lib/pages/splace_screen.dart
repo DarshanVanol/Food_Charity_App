@@ -1,6 +1,8 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:food_charity/pages/choose.dart';
+import 'package:food_charity/wrapper.dart';
 
 // ignore: camel_case_types
 class Splace_Screen extends StatefulWidget {
@@ -14,11 +16,14 @@ class _Splace_ScreenState extends State<Splace_Screen> {
   @override
   Widget build(BuildContext context) {
     return AnimatedSplashScreen(
-        splash: Icon(
-          Icons.bolt,
-          size: 100,
-          color: Colors.amber,
+        splash: Container(
+          height: 300,
+          width: 300,
+          child: Image.asset(
+            'assets/demo.png',
+            fit: BoxFit.cover,
+          ),
         ),
-        nextScreen: Choose());
+        nextScreen: Wrapper());
   }
 }
