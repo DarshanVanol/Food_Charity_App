@@ -4,7 +4,6 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:food_charity/Model/user.dart';
 import 'package:food_charity/pages/splace_screen.dart';
 import 'package:food_charity/services/auth.dart';
-import 'package:food_charity/wrapper.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -43,8 +42,8 @@ class _AppState extends State<App> {
               value: AuthService().userStream(),
               initialData: null,
               child: MaterialApp(
-                  // routes: {'/form': (context) => Donate_form()},
-                  // initialRoute: '/form',
+                  // routes: {'/demo': (context) => Admin()},
+                  // initialRoute: '/demo',
                   debugShowCheckedModeBanner: false,
                   home: Splace_Screen()));
         }

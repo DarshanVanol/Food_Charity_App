@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:food_charity/authenticate/logIn.dart';
+import 'package:food_charity/pages/dialogueBox.dart';
 import 'package:food_charity/pages/don_dialogue.dart';
 import 'package:food_charity/pages/donate_form.dart';
 import 'package:food_charity/services/auth.dart';
@@ -18,6 +19,7 @@ class Donater_home extends StatefulWidget {
 // ignore: camel_case_types
 class _Donater_homeState extends State<Donater_home> {
   String filter = 'all';
+  // ignore: non_constant_identifier_names
   String DonatorName = '';
   String email = '';
   String uid = '';
@@ -33,7 +35,6 @@ class _Donater_homeState extends State<Donater_home> {
     });
   }
 
-  List _option = ['ALL', 'POSTED', 'BOOKED', 'DONATED'];
   List<Widget> chips = [];
   int _selectedIndex = 0;
 
@@ -45,7 +46,6 @@ class _Donater_homeState extends State<Donater_home> {
     uid = firebaseAuth.currentUser!.uid;
     getUserDetails();
 
-    // TODO: implement initState
     super.initState();
   }
 
@@ -57,14 +57,14 @@ class _Donater_homeState extends State<Donater_home> {
           child: Column(
         children: [
           UserAccountsDrawerHeader(
+            decoration: BoxDecoration(color: Colors.blueAccent),
             accountName: Text(DonatorName),
             accountEmail: Text(email),
           ),
           ListTile(
+            leading: Icon(Icons.logout),
             title: Text('LogOut'),
             onTap: () async {
-              var user = firebaseAuth.currentUser;
-
               await auth.logOut();
               if (firebaseAuth.currentUser == null) {
                 print(firebaseAuth.currentUser);
@@ -82,22 +82,27 @@ class _Donater_homeState extends State<Donater_home> {
         elevation: 0,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
-      floatingActionButton: FloatingActionButton(
-          tooltip: 'Donate here',
-          backgroundColor: Colors.blueAccent,
-          onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) => Donate_form(
-                          donatorName: DonatorName,
-                          phone: userDetails?['phone'],
-                        )));
-          },
-          child: Text(
-            'Donate',
-            style: TextStyle(fontSize: 11),
-          )),
+      floatingActionButton: SizedBox(
+        width: 200,
+        child: FloatingActionButton(
+            shape:
+                RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
+            tooltip: 'Donate here',
+            backgroundColor: Colors.blueAccent,
+            onPressed: () async {
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => Donate_form(
+                            donatorName: DonatorName,
+                            phone: userDetails?['phone'],
+                          )));
+            },
+            child: Text(
+              'Donate',
+              style: TextStyle(fontSize: 16),
+            )),
+      ),
       backgroundColor: Colors.white,
       body: SingleChildScrollView(
         child: Column(
@@ -201,16 +206,16 @@ class _Donater_homeState extends State<Donater_home> {
                                 labelStyle: TextStyle(color: Colors.grey[800]),
                                 label: _selectedIndex == 2
                                     ? Text(
-                                        'BOOKED',
+                                        'ACCEPTED',
                                         style: TextStyle(color: Colors.white),
                                       )
-                                    : Text('BOOKED'),
+                                    : Text('ACCEPTED'),
                                 selected: _selectedIndex == 2,
                                 onSelected: (bool selected) {
                                   setState(() {
                                     if (selected) {
                                       _selectedIndex = 2;
-                                      filter = 'booked';
+                                      filter = 'accepted';
                                     }
                                   });
                                 },
@@ -278,11 +283,14 @@ class _Donater_homeState extends State<Donater_home> {
                                             child: ListTile(
                                                 onTap: () {
                                                   list[index]['status'] ==
-                                                          'Booked'
+                                                          'Accepted'
                                                       ? showDialog(
                                                           context: context,
                                                           builder: (context) =>
                                                               DonDialogue(
+                                                                  url: list[
+                                                                          index]
+                                                                      ['url'],
                                                                   docId:
                                                                       id[index],
                                                                   foodName: list[
@@ -293,7 +301,27 @@ class _Donater_homeState extends State<Donater_home> {
                                                                           [
                                                                           'reciever']),
                                                         )
-                                                      : null;
+                                                      : list[index]['status'] ==
+                                                              'Uploaded'
+                                                          ? showDialog(
+                                                              context: context,
+                                                              builder: (context) => DetailDialogue(
+                                                                  name: list[
+                                                                          index][
+                                                                      'name'],
+                                                                  quantity: list[
+                                                                          index]
+                                                                      [
+                                                                      'quantity'],
+                                                                  tittle: list[
+                                                                          index]
+                                                                      [
+                                                                      'tittle'],
+                                                                  docId: id[
+                                                                      index]),
+                                                            )
+                                                          // ignore: unnecessary_statements
+                                                          : null;
                                                 },
                                                 trailing: Image(
                                                   image: AssetImage(list[index]
@@ -304,10 +332,14 @@ class _Donater_homeState extends State<Donater_home> {
                                                   height: 30,
                                                 ),
                                                 isThreeLine: true,
-                                                leading: Image(
-                                                  height: 40,
-                                                  image: AssetImage(
-                                                      'assets/placeholder.png'),
+                                                leading: Hero(
+                                                  tag: list[index]['url'],
+                                                  child: CircleAvatar(
+                                                    radius: 29,
+                                                    backgroundImage:
+                                                        NetworkImage(
+                                                            list[index]['url']),
+                                                  ),
                                                 ),
                                                 title:
                                                     Text(list[index]['tittle']),
@@ -326,7 +358,7 @@ class _Donater_homeState extends State<Donater_home> {
                                                                     .green))
                                                         : list[index][
                                                                     'status'] ==
-                                                                'Booked'
+                                                                'Accepted'
                                                             ? Text(
                                                                 list[index]
                                                                     ['status'],

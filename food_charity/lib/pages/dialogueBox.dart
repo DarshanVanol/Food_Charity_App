@@ -2,45 +2,23 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class DetailDialogue extends StatelessWidget {
-  final String name,
-      address,
-      city,
-      quantity,
-      tittle,
-      donator,
-      phone,
-      docId,
-      recieverName,
-      reciverId;
-  final bool isVeg;
-  final Timestamp date;
-  final String time;
+  final String name, quantity, tittle, docId;
 
   const DetailDialogue({
     Key? key,
     required this.name,
-    required this.address,
-    required this.city,
     required this.quantity,
     required this.tittle,
-    required this.donator,
-    required this.phone,
-    required this.isVeg,
     required this.docId,
-    required this.recieverName,
-    required this.date,
-    required this.time,
-    required this.reciverId,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    DateTime dateTime = date.toDate();
     return Dialog(
       elevation: 15,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(30)),
       child: Container(
-        height: 350,
+        height: 210,
         child: Padding(
           padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
           child: Column(
@@ -70,33 +48,19 @@ class DetailDialogue extends StatelessWidget {
               SizedBox(
                 height: 15,
               ),
-              Row(
-                children: [
-                  buildText(
-                    text: 'Food Name: ',
-                  ),
-                  buildSubText(
-                    text: name,
-                  )
-                ],
+
+              buildText(
+                text: 'Food Name',
+              ),
+              buildSubText(
+                text: name,
               ),
               SizedBox(
                 height: 5,
               ),
+
               Row(
-                children: [
-                  buildText(
-                    text: 'is Veg: ',
-                  ),
-                  buildSubText(
-                    text: '$isVeg',
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   buildText(
                     text: 'Quantity: ',
@@ -109,100 +73,24 @@ class DetailDialogue extends StatelessWidget {
               SizedBox(
                 height: 5,
               ),
-              Row(
-                children: [
-                  buildText(
-                    text: 'City: ',
-                  ),
-                  buildSubText(
-                    text: city,
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Row(
-                children: [
-                  buildText(
-                    text: 'Address: ',
-                  ),
-                  buildSubText(
-                    text: address,
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Row(
-                children: [
-                  buildText(
-                    text: 'Date of Picking: ',
-                  ),
-                  buildSubText(
-                    text: '${dateTime.day}/${dateTime.month}/${dateTime.year}',
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Row(
-                children: [
-                  buildText(
-                    text: 'Time of Picking: ',
-                  ),
-                  buildSubText(
-                    text: time,
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Row(
-                children: [
-                  buildText(
-                    text: 'Donator: ',
-                  ),
-                  buildSubText(
-                    text: donator,
-                  )
-                ],
-              ),
-              SizedBox(
-                height: 5,
-              ),
-              Row(
-                children: [
-                  buildText(
-                    text: 'Phone: ',
-                  ),
-                  buildSubText(
-                    text: phone,
-                  )
-                ],
-              ),
+
               SizedBox(
                 height: 15,
               ),
+              // ignore: deprecated_member_use
               FlatButton(
-                  color: Colors.blueAccent,
+                  color: Colors.red,
                   shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(15)),
                   onPressed: () async {
                     await FirebaseFirestore.instance
                         .collection('DonatedFood')
                         .doc(docId)
-                        .update({
-                      "reciverId": reciverId,
-                      "status": 'Booked',
-                      "reciever": recieverName
-                    }).whenComplete(() => Navigator.pop(context));
+                        .delete()
+                        .whenComplete(() => Navigator.pop(context));
                   },
                   child: Text(
-                    'Book Now',
+                    'Cancel Donation',
                     style: TextStyle(color: Colors.white),
                   ))
             ],
@@ -243,6 +131,7 @@ class buildText extends StatelessWidget {
   Widget build(BuildContext context) {
     return Text(
       text,
+      maxLines: 2,
       style: TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
     );
   }

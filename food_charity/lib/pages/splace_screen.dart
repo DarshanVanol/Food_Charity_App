@@ -1,7 +1,7 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:food_charity/pages/choose.dart';
+
 import 'package:food_charity/wrapper.dart';
 
 // ignore: camel_case_types

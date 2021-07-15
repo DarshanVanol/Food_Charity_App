@@ -2,11 +2,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:food_charity/authenticate/logIn.dart';
 import 'package:food_charity/pages/RecieverOrderStatus.dart';
 
-import 'package:food_charity/pages/dialogueBox.dart';
+import 'package:food_charity/pages/foodDetails.dart';
 import 'package:food_charity/services/auth.dart';
 import 'package:food_charity/services/database.dart';
 
@@ -152,9 +151,9 @@ class _Reciever_homeState extends State<Reciever_home> {
                           Padding(
                             padding: const EdgeInsets.fromLTRB(40, 15, 40, 0),
                             child: TextField(
-                              onChanged: (city_) {
+                              onChanged: (cityValue) {
                                 setState(() {
-                                  city = city_;
+                                  city = cityValue;
                                 });
                               },
                               autofocus: false,
@@ -250,7 +249,73 @@ class _Reciever_homeState extends State<Reciever_home> {
                                               padding: const EdgeInsets.only(
                                                   left: 10, right: 10),
                                               child: ListTile(
-                                                  onTap: () {},
+                                                  onTap: () {
+                                                    Navigator.push(
+                                                        context,
+                                                        CupertinoPageRoute(
+                                                            builder:
+                                                                (context) =>
+                                                                    FoodDetails(
+                                                                      url: list[
+                                                                              index]
+                                                                          [
+                                                                          'url'],
+                                                                      address: list[
+                                                                              index]
+                                                                          [
+                                                                          'address'],
+                                                                      city: list[
+                                                                              index]
+                                                                          [
+                                                                          'city'],
+                                                                      date: list[
+                                                                              index]
+                                                                          [
+                                                                          'date'],
+                                                                      docId: id[
+                                                                          index],
+                                                                      donator: list[
+                                                                              index]
+                                                                          [
+                                                                          'donator'],
+                                                                      isVeg: list[
+                                                                              index]
+                                                                          [
+                                                                          'isVeg'],
+                                                                      name: list[
+                                                                              index]
+                                                                          [
+                                                                          'name'],
+                                                                      phone: list[
+                                                                              index]
+                                                                          [
+                                                                          'phone'],
+                                                                      quantity:
+                                                                          list[index]
+                                                                              [
+                                                                              'quantity'],
+                                                                      recieverName:
+                                                                          name,
+                                                                      reciverId:
+                                                                          uid,
+                                                                      time: list[
+                                                                              index]
+                                                                          [
+                                                                          'time'],
+                                                                      tittle: list[
+                                                                              index]
+                                                                          [
+                                                                          'tittle'],
+                                                                      gp: list[
+                                                                              index]
+                                                                          [
+                                                                          'geoPoint'],
+                                                                      isDirection:
+                                                                          list[index]
+                                                                              [
+                                                                              'isDirection'],
+                                                                    )));
+                                                  },
                                                   trailing: Image(
                                                     image: AssetImage(list[
                                                             index]['isVeg']
@@ -260,10 +325,15 @@ class _Reciever_homeState extends State<Reciever_home> {
                                                     height: 30,
                                                   ),
                                                   isThreeLine: true,
-                                                  leading: Image(
-                                                    height: 40,
-                                                    image: AssetImage(
-                                                        'assets/placeholder.png'),
+                                                  leading: Hero(
+                                                    tag: list[index]['tittle'],
+                                                    child: CircleAvatar(
+                                                      radius: 29,
+                                                      backgroundImage:
+                                                          NetworkImage(
+                                                              list[index]
+                                                                  ['url']),
+                                                    ),
                                                   ),
                                                   title: Text(
                                                       list[index]['tittle']),

@@ -7,15 +7,22 @@ class DatabaseService {
   final CollectionReference donatedFoodCollection =
       FirebaseFirestore.instance.collection('DonatedFood');
 
-  Future updateUserData(
-      String first, String last, String phone, String uid) async {
+  Future updateUserData(String first, String last, String phone, String uid,
+      String? email) async {
     Map<String, dynamic> userMap = new Map();
     userMap = {
       "first": first,
       "last": last,
       "phone": phone,
+      "isAdmin": false,
+      "email": email
     };
     await userDataCollection.doc(uid).set(userMap);
+  }
+
+  checkIsAdmin(String uid) async {
+    DocumentSnapshot snapshot = await userDataCollection.doc(uid).get();
+    return snapshot.get('isAdmin');
   }
 
   Stream<QuerySnapshot> donateStatus(String uid, String filter) {
@@ -24,10 +31,10 @@ class DatabaseService {
           .where('donatorId', isEqualTo: uid)
           .where('status', isEqualTo: 'Donated');
       return query.snapshots();
-    } else if (filter == 'booked') {
+    } else if (filter == 'accepted') {
       Query query = donatedFoodCollection
           .where('donatorId', isEqualTo: uid)
-          .where('status', isEqualTo: 'Booked');
+          .where('status', isEqualTo: 'Accepted');
       return query.snapshots();
     } else if (filter == 'uploaded') {
       Query query = donatedFoodCollection
@@ -42,10 +49,12 @@ class DatabaseService {
 
   Stream<QuerySnapshot> reciveFoodData(String city) {
     if (city.isEmpty) {
-      return donatedFoodCollection.snapshots();
+      return donatedFoodCollection
+          .where('status', isEqualTo: 'Uploaded')
+          .snapshots();
     } else {
       Query query = donatedFoodCollection.where('city', isEqualTo: city);
-      return query.snapshots();
+      return query.where('status', isEqualTo: 'Uploaded').snapshots();
     }
   }
 
@@ -56,11 +65,12 @@ class DatabaseService {
 
   Stream<QuerySnapshot> orderStatus(String recieverId) {
     Query query =
-        donatedFoodCollection.where('reciever', isEqualTo: recieverId);
+        donatedFoodCollection.where('recieverId', isEqualTo: recieverId);
     return query.snapshots();
   }
 
   Future uploadFoodData(
+      String url,
       DateTime date,
       TimeOfDay time,
       String tittle,
@@ -71,8 +81,10 @@ class DatabaseService {
       String address,
       String desc,
       String donatorId,
+      GeoPoint? gp,
       String donator,
-      String phone) async {
+      String phone,
+      bool isDirection) async {
     Map<String, dynamic> foodMap = new Map();
     foodMap = {
       "status": 'Uploaded',
@@ -88,7 +100,10 @@ class DatabaseService {
       "donatorId": donatorId,
       "donator": donator,
       "phone": phone,
-      "reciever": ''
+      "reciever": '',
+      "url": url,
+      "geoPoint": gp,
+      "isDirection": isDirection
     };
     try {
       await donatedFoodCollection.add(foodMap);
